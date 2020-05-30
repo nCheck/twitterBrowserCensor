@@ -27,7 +27,7 @@ def test():
         #remove extra spaces
         txt = dd['txt'].strip()
 
-        #just censor the word Zaira ( just for test )
+        #just censor the word Kunal ( just for test )
         if len( txt ) != 0 and ('kunal' in txt or 'Kunal' in txt):
             txt = txt.replace('kunal', '*****')
             txt = txt.replace('Kunal', '*****')
