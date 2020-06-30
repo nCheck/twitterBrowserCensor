@@ -13,7 +13,7 @@
       }
     ] ,
     "permissions": [
-      "http://localhost/*"
+      "http://localhost/*" , "http://4dfb65ce33e9.ngrok.io/*"
     ]
   
   

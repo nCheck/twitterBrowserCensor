@@ -1,41 +1,63 @@
 import flask
 import os
-from flask import jsonify, request , make_response
-from flask import flash, redirect, url_for, session , render_template
-from flask_cors import CORS, cross_origin
+from flask import jsonify, request , render_template
+from flask import flash, redirect, url_for, session
+from joblib import load
 import requests, json
+import pandas as pd
+import requests
+import random
+import subprocess
+import glob
+from random import random
+import re
+import os
+import numpy as np
+import sklearn
+import joblib
+import requests
+import time
+from sentiment import TweetAnalyzer
 
 
-
-
-
-app = flask.Flask(__name__)
-app.config["DEBUG"] = True
+app = flask.Flask(__name__ )
 app.secret_key = 'super secret key'
-cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 
+#Classifiers
+classifier = joblib.load('svmClassifier.pkl')
+tweet_analyzer = TweetAnalyzer()
 
-
+@app.route("/")
+def home():
+    return "<h1>Running Flask on Google Colab! with " + 'Hello' + "</h1>" 
+  
 @app.route('/test', methods=['POST'])
 def test():
 
     dirty_data = request.get_json()['data']
+    tweet_df = tweet_analyzer.tweets_to_data_frame(dirty_data)
+
+    print('tweet df' , tweet_df)
+
+    tweet_df['sentiment'] = np.array([tweet_analyzer.analyze_sentiment(tweet, classifier) for tweet in tweet_df['tweets']])
+
+    print(tweet_df.head(10))
     clean_data = []
-    for dd in dirty_data:
 
-        #remove extra spaces
-        txt = dd['txt'].strip()
+    for index, row in tweet_df.iterrows():
 
-        #just censor the word Kunal ( just for test )
-        if len( txt ) != 0 and ('kunal' in txt or 'Kunal' in txt):
-            txt = txt.replace('kunal', '*****')
-            txt = txt.replace('Kunal', '*****')
-            clean_data.append( { 'id': dd['id'] , 'txt': txt } )
+      if row['sentiment'] == 0:
+        # print( 'bad sentiment', row['tweets'] )
+        clean_data.append( [ { 'id' : row['id'] , 'text' : row['tweets'] } ] )
 
-    print(clean_data)
+    
+    for clean in clean_data:
+      print('cleaning ->', clean)
 
     return jsonify( clean_data )
+
+
 
 
 

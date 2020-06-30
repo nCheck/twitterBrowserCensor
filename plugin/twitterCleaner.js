@@ -3,27 +3,31 @@ async function cleanTweets() {
     
     //this is html n css for each tweet
     //the tweet is inside a div with given css and inside span, there are text
-    var dads = $("div.css-901oao.r-hkyrab.r-1qd0xha.r-a023e6.r-16dba41.r-ad9z0x.r-bcqeeo.r-bnwqim.r-qvutc0").children('span');
+    console.log("getting data");
+
+    var dads = $("div.css-1dbjc4n.r-16y2uox.r-1wbh5a2.r-1ny4l3l.r-1udh08x.r-1j3t67a");
+    
     var dirty_data = []
 
     //we collect the span txts with id, because we need to know how to replace it
     dads.each( function (id) {
         var txt = $(this).text();
-        dirty_data.push({id,txt});
+        dirty_data.push({id,'text': txt});
     });
 
     //send data for cleaning
     //JSON.stringify()
     
-    console.log("posttting the data" )
+    console.log("posttting the data" , dirty_data );
     //post only if you actually collected the data
     if ( dirty_data.length > 0 ){
-
+        
+        const SERVER = "http://4dfb65ce33e9.ngrok.io/";
         var dict = {"data":dirty_data};
-
+        console.log('dict->', dict);
         $.ajax({
             type: "POST", 
-            url: "http://localhost:5000/test", //localhost Flask
+            url: SERVER + "test", //localhost Flask
             data : JSON.stringify(dict),
             async: false,
             contentType: "application/json",
@@ -32,12 +36,13 @@ async function cleanTweets() {
                 console.log("server responded", data);
 
                 for( var i = 0 ; i < data.length ; i++ ){
-                    var ele = data[i]
+                    var ele = data[i][0]
+                    console.log("ele is", i , ele)
                     var id = ele['id'];
-                    var ntxt = ele['txt']
-                    //update the span text with the cleaned span text
-                    dads.eq(id).text(ntxt)
-                    console.log("updated ", dads.eq(id).text());
+                    var ntxt = ele['text']
+                    //Hide the Given Tweet
+                    dads.eq(id).hide();
+                    console.log("hidded ", dads.eq(id).text() , 'at id' , id) ;
                 }
 
             }
