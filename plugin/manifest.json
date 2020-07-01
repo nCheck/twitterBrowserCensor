@@ -12,8 +12,9 @@
         "js": ["assets/jquery-3.5.1.min.js" , "twitterCleaner.js" ]
       }
     ] ,
+    
     "permissions": [
-      "http://localhost/*" , "http://4dfb65ce33e9.ngrok.io/*"
+      "http://localhost/*"  , "http://f273604eab9f.ngrok.io/*"
     ]
   
   

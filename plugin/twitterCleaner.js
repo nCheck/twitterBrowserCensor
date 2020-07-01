@@ -19,10 +19,13 @@ async function cleanTweets() {
     //JSON.stringify()
     
     console.log("posttting the data" , dirty_data );
+
     //post only if you actually collected the data
     if ( dirty_data.length > 0 ){
         
-        const SERVER = "http://4dfb65ce33e9.ngrok.io/";
+        //UPDATE ME: (ending with slash)
+        const SERVER = "http://f273604eab9f.ngrok.io/";
+
         var dict = {"data":dirty_data};
         console.log('dict->', dict);
         $.ajax({
@@ -39,7 +42,6 @@ async function cleanTweets() {
                     var ele = data[i][0]
                     console.log("ele is", i , ele)
                     var id = ele['id'];
-                    var ntxt = ele['text']
                     //Hide the Given Tweet
                     dads.eq(id).hide();
                     console.log("hidded ", dads.eq(id).text() , 'at id' , id) ;
